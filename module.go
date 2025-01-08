@@ -151,7 +151,7 @@ func parseCaddyfileForNoBots(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandle
 }
 
 // serveBomb delivers the bomb to front-end
-func serveBomb(w http.ResponseWriter, r *http.Request, bomb string) error {
+func serveBomb(w http.ResponseWriter, _ *http.Request, bomb string) error {
 	var cbytes []byte
 	var err error
 	if bombs.Exists(bomb) {
