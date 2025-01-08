@@ -86,12 +86,12 @@ func (ua BotUA) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp
 			}
 			return serveBomb(w, r, ua.Bomb)
 		}
-	}
 
-	// logging active?
-	if ua.ShowMisses && ua.Logger != nil {
-		ua.Logger.Info("Nice UA", zap.String("ua", rua))
-	}
+		// logging active?
+		if ua.ShowMisses && ua.Logger != nil {
+			ua.Logger.Info("Nice UA", zap.String("ua", rua))
+		}
+	} // do not log anything for public URIs
 
 	// Nothing happens carry on with next stuff
 	return next.ServeHTTP(w, r)
