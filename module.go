@@ -83,14 +83,14 @@ func (ua BotUA) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp
 		if ua.IsEvil(rua) {
 			// logging active?
 			if ua.ShowHits && ua.Logger != nil {
-				ua.Logger.Warn("Evil UA", zap.String("ua", rua))
+				ua.Logger.Warn("Evil UA", zap.String("ua", rua), zap.String("path", r.URL.Path))
 			}
 			return serveBomb(w, r, ua.Bomb)
 		}
 
 		// logging active?
 		if ua.ShowMisses && ua.Logger != nil {
-			ua.Logger.Info("Nice UA", zap.String("ua", rua))
+			ua.Logger.Info("Nice UA", zap.String("ua", rua), zap.String("path", r.URL.Path))
 		}
 	} else if ua.ShowPublic && ua.Logger != nil {
 		ua.Logger.Info("Public URI access", zap.String("ua", rua), zap.String("path", r.URL.Path))
