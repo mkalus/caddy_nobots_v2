@@ -13,6 +13,7 @@ http://localhost:2015 {
 		public "^/[a-z]{,5}/public"
 		showHits
 		showMisses
+		showPublic
 	}
 
 	respond "Hello, world!"

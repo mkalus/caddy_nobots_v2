@@ -23,6 +23,7 @@ type BotUA struct {
 	Logger     *zap.Logger      // Logger instance
 	ShowHits   bool             // log UA hits?
 	ShowMisses bool             // log UA misses?
+	ShowPublic bool             // log access to public directories
 	Uas        []string         // user-agents to block
 	Bomb       string           // Bomb file or string
 	Re         []*regexp.Regexp // regular expressions for user-agents to block
@@ -91,7 +92,9 @@ func (ua BotUA) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp
 		if ua.ShowMisses && ua.Logger != nil {
 			ua.Logger.Info("Nice UA", zap.String("ua", rua))
 		}
-	} // do not log anything for public URIs
+	} else if ua.ShowPublic && ua.Logger != nil {
+		ua.Logger.Info("Public URI access", zap.String("ua", rua), zap.String("path", r.URL.Path))
+	}
 
 	// Nothing happens carry on with next stuff
 	return next.ServeHTTP(w, r)
@@ -129,6 +132,8 @@ func (ua *BotUA) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				ua.ShowHits = true
 			case "showMisses":
 				ua.ShowMisses = true
+			case "showPublic":
+				ua.ShowPublic = true
 			default:
 				ua.Uas = append(ua.Uas, d.Val())
 			}
