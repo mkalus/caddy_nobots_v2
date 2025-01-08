@@ -1,0 +1,19 @@
+{
+	order nobots after header
+	auto_https off
+}
+
+http://localhost:2015 {
+	nobots "bomb.gz" {
+		"Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
+		"DuckDuckBot"
+		regexp "^[Bb]ot"
+		regexp "bingbot"
+		public "^/public"
+		public "^/[a-z]{,5}/public"
+		showHits
+		showMisses
+	}
+
+	respond "Hello, world!"
+}
