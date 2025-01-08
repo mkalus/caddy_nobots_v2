@@ -4,7 +4,7 @@
 }
 
 http://localhost:2015 {
-	nobots "bomb.gz" {
+	nobots "1G" {
 		"Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
 		"DuckDuckBot"
 		regexp "^[Bb]ot"
