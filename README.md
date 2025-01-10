@@ -14,8 +14,9 @@ The directive for the Caddyfile is really simple. First, you have to place the b
 for example `bomb.gz` in the example below.  Since this is a third party directive, you have to tell Caddy when to add
 the directive using the global `order` setting. A full example can be found in [Caddyfile](./Caddyfile).
 
-Then you can specify user agent either as strings or regular expressions. When using regular expressions you must add
-the `regexp` keyword in front of the regex.
+Then you can specify user agent either as strings, partial strings, or regular expressions. When using regular
+expressions you must add the `regexp` keyword in front of the regex. For partial expressions (which are a bit faster
+than regular expressions, you prepend the keyword `contains`).
 
 Caddyfile example:
 
@@ -28,9 +29,15 @@ nobots "bomb.gz" {
   "Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
   "DuckDuckBot"
   regexp "^[Bb]ot"
-  regexp "bingbot"
+  contains "bingbot"
 }
 ```
+
+The order of checking the user agent is:
+
+* exact match
+* partial match
+* regular expression match
 
 There is another keyword that is useful in case you want to allow crawlers and bots navigate through specific parts of
 your website. The keyword is `public` and its values are regular expressions, so you can use it as following:

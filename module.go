@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 )
 
 func init() {
@@ -25,6 +26,7 @@ type BotUA struct {
 	ShowMisses bool             // log UA misses?
 	ShowPublic bool             // log access to public directories
 	Uas        []string         // user-agents to block
+	Contains   []string         //partial strings for user-agents to block
 	Bomb       string           // Bomb file or string
 	Re         []*regexp.Regexp // regular expressions for user-agents to block
 	Public     []*regexp.Regexp // public directories
@@ -57,15 +59,21 @@ func (ua BotUA) IsPublicURI(uri string) bool {
 
 // IsEvil check the remote UA against evil UAs
 func (ua BotUA) IsEvil(rua string) bool {
-	// In case there are regexp
-	for _, re := range ua.Re {
-		if re.MatchString(rua) {
-			return true
-		}
-	}
 	// In case there are strings
 	for _, agent := range ua.Uas {
 		if agent == rua {
+			return true
+		}
+	}
+	// In case there are partial strings
+	for _, partial := range ua.Contains {
+		if strings.Contains(rua, partial) {
+			return true
+		}
+	}
+	// In case there are regexp
+	for _, re := range ua.Re {
+		if re.MatchString(rua) {
 			return true
 		}
 	}
@@ -110,6 +118,11 @@ func (ua *BotUA) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 		for d.NextBlock(0) {
 			switch d.Val() {
+			case "contains":
+				if !d.NextArg() {
+					return d.Errf("expected argument for string to check for")
+				}
+				ua.Contains = append(ua.Contains, d.Val())
 			case "regexp":
 				if !d.NextArg() {
 					return d.Errf("expected argument for regular expression")

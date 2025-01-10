@@ -49,10 +49,13 @@ func TestBotUA_IsEvil(t *testing.T) {
 		{name: "evil1", ua: "GoogleBot", botua: &BotUA{
 			Uas: []string{"GoogleBot", "BingBot"},
 		}, expected: true},
-		{name: "evil2", ua: "GoogleBot", botua: &BotUA{
+		{name: "evil2", ua: "This is my GoogleBot agent, check me out!", botua: &BotUA{
 			Re: []*regexp.Regexp{
 				regexp.MustCompile("[Bb]ot"),
 			},
+		}, expected: true},
+		{name: "evil3", ua: "This is my GoogleBot agent, check me out!", botua: &BotUA{
+			Contains: []string{"GoogleBot", "BingBot"},
 		}, expected: true},
 		{name: "nice1", ua: "NiceBrowser", botua: &BotUA{
 			Uas: []string{"GoogleBot", "BingBot"},

@@ -8,7 +8,7 @@ http://localhost:2015 {
 		"Googlebot/2.1 (+http://www.googlebot.com/bot.html)"
 		"DuckDuckBot"
 		regexp "^[Bb]ot"
-		regexp "bingbot"
+		contains "bingbot"
 		public "^/public"
 		public "^/[a-z]{,5}/public"
 		showHits
