@@ -19,17 +19,34 @@ func init() {
 	httpcaddyfile.RegisterHandlerDirective("nobots", parseCaddyfileForNoBots)
 }
 
-// BotUA plugin struct, including config
+// BotUA is a Caddy Server plugin to protect your website against web crawlers and bots. It is an enhancement of the
+// v1 version https://github.com/caddy-plugins/nobots
 type BotUA struct {
-	Logger     *zap.Logger      // Logger instance
-	ShowHits   bool             // log UA hits?
-	ShowMisses bool             // log UA misses?
-	ShowPublic bool             // log access to public directories
-	Uas        []string         // user-agents to block
-	Contains   []string         //partial strings for user-agents to block
-	Bomb       string           // Bomb file or string
-	Re         []*regexp.Regexp // regular expressions for user-agents to block
-	Public     []*regexp.Regexp // public directories
+	Logger *zap.Logger // Logger instance
+
+	// Set to true to log hits (blocked requests)
+	ShowHits bool `json:"show_hits"`
+
+	// Set to true to log misses (non-blocked requests)
+	ShowMisses bool `json:"show_misses"`
+
+	// Set to true to log requests to public directories
+	ShowPublic bool `json:"show_public"`
+
+	// User-Agents to block (full name)
+	Uas []string `json:"uas"`
+
+	// Partial strings for user-agents to block
+	Contains []string `json:"contains"`
+
+	// Bomb file or string. Should be a gzipped file. Allowed predefined bomb strings are: 1G, 10G, 1T
+	Bomb string `json:"bomb"`
+
+	// Regular expressions for user-agents to block
+	Re []*regexp.Regexp `json:"re"`
+
+	// Public directories to exclude from blocking (regular expressions)
+	Public []*regexp.Regexp `json:"public"`
 }
 
 // CaddyModule returns the Caddy module information.
