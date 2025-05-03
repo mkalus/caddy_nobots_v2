@@ -94,7 +94,7 @@ Download or create the [Caddyfile](./Caddyfile) used as an example (all logging 
 Compile your custom Caddy server using:
 
 ```shell
-xcaddy build --with github.com/mkalus/caddy_block_aws
+xcaddy build --with github.com/mkalus/caddy_nobots_v2
 ```
 
 And run it:
