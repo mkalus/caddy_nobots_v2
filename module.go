@@ -2,16 +2,18 @@ package caddy_nobots_v2
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"regexp"
+	"slices"
+	"strings"
+
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/mkalus/caddy_nobots_v2/bombs"
 	"go.uber.org/zap"
-	"net/http"
-	"os"
-	"regexp"
-	"strings"
 )
 
 func init() {
@@ -77,11 +79,10 @@ func (ua BotUA) IsPublicURI(uri string) bool {
 // IsEvil check the remote UA against evil UAs
 func (ua BotUA) IsEvil(rua string) bool {
 	// In case there are strings
-	for _, agent := range ua.Uas {
-		if agent == rua {
-			return true
-		}
+	if slices.Contains(ua.Uas, rua) {
+		return true
 	}
+
 	// In case there are partial strings
 	for _, partial := range ua.Contains {
 		if strings.Contains(rua, partial) {
